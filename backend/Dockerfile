@@ -7,7 +7,7 @@ COPY src ./src
 RUN mvn -B -q -DskipTests package
 
 # ---- run: minimal JRE image, non-root user, no shell tools needed ----
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 RUN addgroup -S ibuvio && adduser -S -G ibuvio -H -s /sbin/nologin ibuvio
 WORKDIR /app
 COPY --from=build --chown=ibuvio:ibuvio /src/target/ibuvio-pay-backend-*.jar app.jar
