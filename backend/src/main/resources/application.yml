@@ -1,0 +1,113 @@
+# IBUVIO Pay - base configuration.
+# Every secret comes from environment variables. Nothing sensitive is committed.
+spring:
+  application:
+    name: ibuvio-pay
+  profiles:
+    default: prod          # Safe default: if no profile is given we run with production hardening.
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:10}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate   # Schema is owned by Flyway, never auto-generated.
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+    # Vendor folder holds PostgreSQL-only hardening (e.g. append-only audit log grants).
+    locations: classpath:db/migration,classpath:db/vendor/{vendor}
+    # Migrations can run as the schema owner while the app itself connects as a least-privilege role.
+    user: ${FLYWAY_USER:${spring.datasource.username}}
+    password: ${FLYWAY_PASSWORD:${spring.datasource.password}}
+    fail-on-missing-locations: false
+  jackson:
+    default-property-inclusion: non_null
+  mvc:
+    problemdetails:
+      enabled: false
+  web:
+    resources:
+      add-mappings: false  # No static files are served from this API.
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: ${PORT:8080}
+  forward-headers-strategy: ${FORWARD_HEADERS_STRATEGY:none}
+  error:
+    include-stacktrace: never
+    include-message: never
+    include-binding-errors: never
+    include-exception: false
+    whitelabel:
+      enabled: false
+  servlet:
+    session:
+      tracking-modes: []
+  tomcat:
+    max-http-form-post-size: 64KB
+    max-swallow-size: 256KB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: false
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: WARN
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}                    # base64, >= 64 bytes (HS512)
+    issuer: ${JWT_ISSUER:https://api.ibuvio.app}
+    audience: ${JWT_AUDIENCE:ibuvio-mobile}
+    access-ttl: ${JWT_ACCESS_TTL:PT15M}
+    refresh-ttl: ${JWT_REFRESH_TTL:P30D}
+  crypto:
+    encryption-key: ${APP_ENCRYPTION_KEY}    # base64, exactly 32 bytes (AES-256-GCM)
+    hmac-key: ${APP_HMAC_KEY}                # base64, >= 32 bytes
+  otp:
+    sender: ${OTP_SENDER:sms-gateway}        # sms-gateway | log (log is refused in prod)
+    ttl: PT5M
+    max-attempts: 5
+    resend-cooldown: PT30S
+    max-per-hour: 5
+    sms-gateway:
+      url: ${SMS_GATEWAY_URL:}
+      api-key: ${SMS_GATEWAY_API_KEY:}
+      sender-id: ${SMS_SENDER_ID:IBUVIO}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:}  # comma separated; empty = no cross-origin browser access
+  admin:
+    allowed-ips: ${ADMIN_ALLOWED_IPS:}         # comma separated; empty = any IP (role still required)
+  rate-limit:
+    auth-per-minute: ${RATE_LIMIT_AUTH:10}
+    payments-per-minute: ${RATE_LIMIT_PAYMENTS:20}
+    general-per-minute: ${RATE_LIMIT_GENERAL:120}
+  psp:
+    mode: ${PSP_MODE:sandbox}                  # sandbox | live (live requires a licensed PSP bank integration)
+    vpa-handle: ${VPA_HANDLE:ibuvio}
+    sandbox-opening-balance-paise: ${SANDBOX_OPENING_BALANCE:5000000}
+  limits:
+    per-transaction-paise: 10000000            # Rs 1,00,000 (NPCI P2P limit)
+    daily-paise: 10000000                      # Rs 1,00,000 per day
+    new-user-cooling-paise: 500000             # Rs 5,000 during first 24h (NPCI cooling period)

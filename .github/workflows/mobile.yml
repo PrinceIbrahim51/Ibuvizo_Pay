@@ -1,0 +1,33 @@
+name: Mobile CI
+on:
+  push:
+    paths: ['mobile/**', '.github/workflows/mobile.yml']
+  pull_request:
+    paths: ['mobile/**', '.github/workflows/mobile.yml']
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - run: npm ci
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Unit tests
+        run: npm test
+      - name: Dependency audit (runtime deps, fail on critical)
+        run: npm audit --omit=dev --audit-level=critical
+      - name: Release bundle builds (Android + iOS)
+        env:
+          NODE_ENV: production
+          EXPO_PUBLIC_API_URL: https://api.ibuvio.app
+        run: npx expo export --platform android --platform ios --output-dir dist

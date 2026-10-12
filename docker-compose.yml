@@ -1,0 +1,25 @@
+# Local development stack: PostgreSQL + API. Secrets come from backend/.env (not committed).
+# 1) cp backend/.env.example backend/.env and fill it in (for local use set SPRING_PROFILES_ACTIVE=dev,
+#    OTP_SENDER=log and DB_URL=jdbc:postgresql://db:5432/ibuvio)
+# 2) docker compose up --build
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD:?set POSTGRES_SUPERUSER_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"   # bound to localhost only, never exposed publicly
+  api:
+    build: ./backend
+    env_file: ./backend/.env
+    depends_on: [db]
+    ports:
+      - "127.0.0.1:8080:8080"
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+volumes:
+  pgdata:

@@ -1,0 +1,102 @@
+{
+  "expo": {
+    "name": "IBUVIO",
+    "slug": "ibuvio-pay",
+    "version": "1.0.0",
+    "scheme": "ibuvio",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#EEF2FF",
+    "ios": {
+      "bundleIdentifier": "app.ibuvio.pay",
+      "supportsTablet": false,
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "NSCameraUsageDescription": "IBUVIO uses the camera to scan UPI QR codes.",
+        "NSMicrophoneUsageDescription": "IBUVIO uses the microphone for voice payments and voice bookkeeping.",
+        "NSSpeechRecognitionUsageDescription": "IBUVIO turns your voice commands into payment or ledger entries.",
+        "NSFaceIDUsageDescription": "IBUVIO uses Face ID to unlock the app securely."
+      }
+    },
+    "android": {
+      "package": "app.ibuvio.pay",
+      "allowBackup": false,
+      "adaptiveIcon": {
+        "backgroundColor": "#3B5BFD",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.USE_BIOMETRIC"
+      ],
+      "blockedPermissions": [
+        "android.permission.READ_SMS",
+        "android.permission.RECEIVE_SMS",
+        "android.permission.READ_CONTACTS",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": "IBUVIO uses Face ID to unlock your saved session."
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "IBUVIO uses Face ID to unlock the app securely."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "IBUVIO uses the camera to scan UPI QR codes.",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "IBUVIO reads a QR code image you choose from your gallery.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "IBUVIO uses the microphone for voice payments and voice bookkeeping.",
+          "speechRecognitionPermission": "IBUVIO turns your voice commands into payment or ledger entries."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": false
+          }
+        }
+      ],
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}
