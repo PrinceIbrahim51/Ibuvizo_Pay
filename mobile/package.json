@@ -22,7 +22,7 @@
     "expo-secure-store": "~57.0.4",
     "expo-speech-recognition": "^57.1.1",
     "expo-status-bar": "~57.0.1",
-    "react": "19.2.3",
+    "react": "19.3.0",
     "react-dom": "19.2.3",
     "react-native": "0.86.3",
     "react-native-safe-area-context": "~5.7.0",
@@ -31,7 +31,7 @@
     "react-native-web": "~0.21.4"
   },
   "devDependencies": {
-    "@types/react": "~19.2.2",
+    "@types/react": "~19.3.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "babel-preset-expo": "~57.0.14",
     "typescript": "~6.0.3"
