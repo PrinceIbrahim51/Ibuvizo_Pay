@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { errorMessage } from '@/api/client';
 import { bankApi } from '@/api/endpoints';
@@ -13,6 +13,7 @@ import { Screen } from '@/components/Screen';
 import { useApi } from '@/lib/useApi';
 import { digitsOnly, isWeakPin, rules } from '@/lib/validation';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 export default function LinkAccount() {
   const { theme } = useTheme();

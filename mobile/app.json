@@ -47,7 +47,13 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single",
+      "name": "IBUVIO",
+      "shortName": "IBUVIO",
+      "themeColor": "#3B5BFD",
+      "backgroundColor": "#EEF2FF"
     },
     "plugins": [
       "expo-router",

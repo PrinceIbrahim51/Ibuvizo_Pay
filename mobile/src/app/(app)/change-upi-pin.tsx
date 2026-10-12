@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Text } from 'react-native';
+import { Text } from 'react-native';
 
 import { errorMessage } from '@/api/client';
 import { bankApi } from '@/api/endpoints';
@@ -11,6 +11,7 @@ import { PinSheet } from '@/components/PinSheet';
 import { Screen } from '@/components/Screen';
 import { isWeakPin } from '@/lib/validation';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 export default function ChangeUpiPin() {
   const { theme } = useTheme();

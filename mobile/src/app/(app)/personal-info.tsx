@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Text } from 'react-native';
+import { Text } from 'react-native';
 
 import { errorMessage } from '@/api/client';
 import { userApi } from '@/api/endpoints';
@@ -13,6 +13,7 @@ import { Screen } from '@/components/Screen';
 import { Segmented } from '@/components/Segmented';
 import { maskPhone, rules, sanitizeText } from '@/lib/validation';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 export default function PersonalInfo() {
   const { theme } = useTheme();

@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { errorMessage } from '@/api/client';
 import { useAuth } from '@/auth/AuthContext';
@@ -12,6 +12,7 @@ import { Field } from '@/components/Field';
 import { useCountdown } from '@/lib/useCountdown';
 import { digitsOnly, rules } from '@/lib/validation';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 export default function Login() {
   const { theme } = useTheme();
@@ -123,11 +124,11 @@ export default function Login() {
       </View>
       {error ? <Text style={{ color: theme.danger, textAlign: 'center' }}>{error}</Text> : null}
       <GradientButton title={challengeId ? 'Sign in' : 'Continue'} onPress={submit} loading={busy} />
-      <Pressable onPress={biometric} style={[styles.bioRow, { backgroundColor: theme.input, borderColor: theme.cardBorder }]} accessibilityRole="button">
+      {Platform.OS === 'web' ? null : <Pressable onPress={biometric} style={[styles.bioRow, { backgroundColor: theme.input, borderColor: theme.cardBorder }]} accessibilityRole="button">
         <View style={styles.bioIcon}><Ionicons name="finger-print" size={32} color={theme.primary} /></View>
         <Text style={{ flex: 1, fontSize: 18, color: theme.text }}>Sign in with biometrics</Text>
         <Ionicons name="chevron-forward" size={22} color={theme.textMuted} />
-      </Pressable>
+      </Pressable>}
       <View style={styles.orRow}>
         <View style={[styles.line, { backgroundColor: theme.divider }]} />
         <Text style={{ color: theme.textMuted, fontWeight: '600' }}>OR</Text>

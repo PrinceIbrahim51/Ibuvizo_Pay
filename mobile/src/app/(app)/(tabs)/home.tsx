@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { errorMessage } from '@/api/client';
 import { bankApi, paymentApi } from '@/api/endpoints';
@@ -17,6 +17,7 @@ import { rupee } from '@/lib/money';
 import { useApi } from '@/lib/useApi';
 import type { tileGradients } from '@/theme/palette';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 type Tile = { icon: keyof typeof Ionicons.glyphMap; g: keyof typeof tileGradients; title: string; sub: string; go: () => void };
 

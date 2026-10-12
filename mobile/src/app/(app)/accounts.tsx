@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { errorMessage } from '@/api/client';
 import { bankApi } from '@/api/endpoints';
@@ -16,6 +16,7 @@ import { Screen } from '@/components/Screen';
 import { rupee } from '@/lib/money';
 import { useApi } from '@/lib/useApi';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 const BANK_COLORS: Record<string, string> = { HDFC: '#E11D48', SBIN: '#1D4ED8', UTIB: '#9F1239', ICIC: '#EA580C', KKBK: '#DC2626', PUNB: '#A21CAF', CNRB: '#0369A1', IOBA: '#1E40AF', IDIB: '#0F766E' };
 

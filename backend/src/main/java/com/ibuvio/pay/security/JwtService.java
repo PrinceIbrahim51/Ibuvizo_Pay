@@ -1,7 +1,6 @@
 package com.ibuvio.pay.security;
 
 import java.time.Instant;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +35,7 @@ public class JwtService {
 
     public JwtService(AppProperties props) {
         this.cfg = props.jwt();
-        SecretKey key = new SecretKeySpec(Base64.getDecoder().decode(cfg.secret()), "HmacSHA512");
+        SecretKey key = new SecretKeySpec(KeyMaterial.jwtKey(cfg.secret()), "HmacSHA512");
         this.encoder = NimbusJwtEncoder.withSecretKey(key).algorithm(MacAlgorithm.HS512).build();
         this.decoder = NimbusJwtDecoder.withSecretKey(key).macAlgorithm(MacAlgorithm.HS512).build();
         this.decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(

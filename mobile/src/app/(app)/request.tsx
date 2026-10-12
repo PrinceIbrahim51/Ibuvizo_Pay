@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { errorMessage } from '@/api/client';
 import { paymentApi } from '@/api/endpoints';
@@ -14,6 +14,7 @@ import { amountToPaise, rupee } from '@/lib/money';
 import { useApi } from '@/lib/useApi';
 import { rules, sanitizeText } from '@/lib/validation';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 export default function RequestMoney() {
   const { theme } = useTheme();

@@ -2,13 +2,14 @@ package com.ibuvio.pay.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
+import com.ibuvio.pay.security.KeyMaterial;
 
 import jakarta.annotation.PostConstruct;
 
@@ -32,12 +33,14 @@ public class StartupSecurityValidator {
     @PostConstruct
     void validate() {
         List<String> problems = new ArrayList<>();
-        boolean prod = Arrays.asList(env.getActiveProfiles()).contains("prod")
-                || env.getActiveProfiles().length == 0;
+        List<String> profiles = Arrays.asList(env.getActiveProfiles());
+        boolean staging = profiles.contains("staging");
+        // staging = production hardening on a sandbox deployment (simulated money)
+        boolean prod = profiles.contains("prod") || staging || profiles.isEmpty();
 
-        checkKey(problems, "JWT_SECRET", props.jwt().secret(), 64, false);
-        checkKey(problems, "APP_ENCRYPTION_KEY", props.crypto().encryptionKey(), 32, true);
-        checkKey(problems, "APP_HMAC_KEY", props.crypto().hmacKey(), 32, false);
+        checkKey(problems, "JWT_SECRET", props.jwt().secret());
+        checkKey(problems, "APP_ENCRYPTION_KEY", props.crypto().encryptionKey());
+        checkKey(problems, "APP_HMAC_KEY", props.crypto().hmacKey());
 
         if (props.jwt().accessTtl().toMinutes() > 30) {
             problems.add("JWT_ACCESS_TTL must be 30 minutes or less");
@@ -45,7 +48,11 @@ public class StartupSecurityValidator {
 
         if (prod) {
             if ("log".equalsIgnoreCase(props.otp().sender())) {
-                problems.add("OTP_SENDER=log prints OTPs to logs and is not allowed in production");
+                if (!staging || !"sandbox".equalsIgnoreCase(props.psp().mode())) {
+                    problems.add("OTP_SENDER=log prints OTPs to logs; it is only allowed in the staging profile with PSP_MODE=sandbox");
+                } else {
+                    log.warn("STAGING: OTPs are written to the server log (visible to the operator only). Configure an SMS gateway before real users.");
+                }
             }
             if ("sms-gateway".equalsIgnoreCase(props.otp().sender())) {
                 String url = props.otp().smsGateway().url();
@@ -77,18 +84,11 @@ public class StartupSecurityValidator {
         }
     }
 
-    private static void checkKey(List<String> problems, String name, String value, int minBytes, boolean exact) {
+    private static void checkKey(List<String> problems, String name, String value) {
         if (isBlank(value)) {
             problems.add(name + " is not set");
-            return;
-        }
-        try {
-            int len = Base64.getDecoder().decode(value).length;
-            if (exact ? len != minBytes : len < minBytes) {
-                problems.add(name + " must decode to " + (exact ? "exactly " : "at least ") + minBytes + " bytes");
-            }
-        } catch (IllegalArgumentException e) {
-            problems.add(name + " must be base64 encoded");
+        } else if (KeyMaterial.bytes(value).length < KeyMaterial.MIN_BYTES) {
+            problems.add(name + " must contain at least 256 bits (e.g. openssl rand -base64 32)");
         }
     }
 

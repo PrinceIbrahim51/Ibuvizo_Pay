@@ -3,7 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { ExpoSpeechRecognitionModule, useSpeechRecognitionEvent } from 'expo-speech-recognition';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, Animated, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Animated, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { errorMessage } from '@/api/client';
 import { shopApi, voiceApi } from '@/api/endpoints';
@@ -18,6 +18,7 @@ import { LANG_LABEL, SPEECH_LOCALE, VOICE_EXAMPLES, t } from '@/lib/i18n';
 import { rupee } from '@/lib/money';
 import { sanitizeText } from '@/lib/validation';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 /**
  * USP: "Voice UPI" + voice bookkeeping in Tamil, Hindi, Telugu and English.

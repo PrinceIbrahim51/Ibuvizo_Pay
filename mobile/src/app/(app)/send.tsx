@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { ApiError, errorMessage } from '@/api/client';
 import { bankApi, paymentApi, userApi } from '@/api/endpoints';
@@ -18,6 +18,7 @@ import { Screen } from '@/components/Screen';
 import { amountToPaise, applyKey, formatRupees } from '@/lib/money';
 import { sanitizeText } from '@/lib/validation';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 const CHANNELS: Channel[] = ['VPA', 'QR', 'CONTACT', 'VOICE', 'REQUEST', 'BANK_TRANSFER'];
 

@@ -1,7 +1,7 @@
 import * as LocalAuthentication from 'expo-local-authentication';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, Switch, Text } from 'react-native';
+import { Switch, Text } from 'react-native';
 
 import { useAuth } from '@/auth/AuthContext';
 import { biometricEnabled } from '@/auth/secureSession';
@@ -10,6 +10,7 @@ import { Header } from '@/components/Header';
 import { ListRow } from '@/components/ListRow';
 import { Screen } from '@/components/Screen';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 export default function Security() {
   const { theme } = useTheme();

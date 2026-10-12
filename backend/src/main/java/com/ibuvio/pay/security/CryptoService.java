@@ -29,8 +29,8 @@ public class CryptoService {
     private final SecureRandom random = new SecureRandom();
 
     public CryptoService(AppProperties props) {
-        this.aesKey = new SecretKeySpec(Base64.getDecoder().decode(props.crypto().encryptionKey()), "AES");
-        this.hmacKey = new SecretKeySpec(Base64.getDecoder().decode(props.crypto().hmacKey()), "HmacSHA256");
+        this.aesKey = new SecretKeySpec(KeyMaterial.aesKey(props.crypto().encryptionKey()), "AES");
+        this.hmacKey = new SecretKeySpec(KeyMaterial.bytes(props.crypto().hmacKey()), "HmacSHA256");
     }
 
     public String encrypt(String plain) {

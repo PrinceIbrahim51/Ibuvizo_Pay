@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import { router } from 'expo-router';
-import { Alert, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Switch, Text, View } from 'react-native';
 
 import { userApi } from '@/api/endpoints';
 import { useAuth } from '@/auth/AuthContext';
@@ -13,6 +13,7 @@ import { Screen } from '@/components/Screen';
 import { maskPhone } from '@/lib/validation';
 import type { ThemeName } from '@/theme/palette';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 export default function Profile() {
   const { theme, setTheme } = useTheme();

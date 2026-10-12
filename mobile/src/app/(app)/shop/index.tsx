@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { Alert, Pressable, Share, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Share, StyleSheet, Text, View } from 'react-native';
 
 import { errorMessage } from '@/api/client';
 import { shopApi } from '@/api/endpoints';
@@ -15,6 +15,7 @@ import { t } from '@/lib/i18n';
 import { rupee } from '@/lib/money';
 import { useApi } from '@/lib/useApi';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 /** USP: "UPI for Small Shops" - every UPI receipt lands in the books automatically; cash sales by voice or tap. */
 export default function ShopHome() {
@@ -49,7 +50,7 @@ export default function ShopHome() {
     if (!d) return;
     Share.share({
       message: `${shop.data?.shopName ?? 'My shop'} • ${today}\n${t('income', lang)}: ${rupee(d.incomePaise)}\n${t('expense', lang)}: ${rupee(d.expensePaise)}\n${profit >= 0 ? t('profit', lang) : t('loss', lang)}: ${rupee(Math.abs(profit))}\n— IBUVIO Shop Books`,
-    });
+    }).catch(() => {});
   };
 
   return (

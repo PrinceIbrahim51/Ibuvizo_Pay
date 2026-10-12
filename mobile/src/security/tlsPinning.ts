@@ -1,5 +1,7 @@
 import { initializeSslPinning, isSslPinningAvailable } from 'react-native-ssl-public-key-pinning';
 
+import { Platform } from 'react-native';
+
 import { API_URL, TLS_PINS } from '@/api/config';
 
 /**
@@ -8,7 +10,8 @@ import { API_URL, TLS_PINS } from '@/api/config';
  * Configure EXPO_PUBLIC_TLS_PINS with at least two hashes (current + backup key).
  */
 export async function enableTlsPinning(): Promise<void> {
-  if (TLS_PINS.length < 2 || !API_URL.startsWith('https://') || !isSslPinningAvailable()) return;
+  // Browsers manage TLS themselves; pinning applies to the native apps only.
+  if (Platform.OS === 'web' || TLS_PINS.length < 2 || !API_URL.startsWith('https://') || !isSslPinningAvailable()) return;
   const host = new URL(API_URL).hostname;
   await initializeSslPinning({ [host]: { includeSubdomains: false, publicKeyHashes: TLS_PINS } });
 }

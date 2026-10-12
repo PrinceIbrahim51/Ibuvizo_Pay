@@ -3,7 +3,7 @@ import { CameraView, scanFromURLAsync, useCameraPermissions, type BarcodeScannin
 import * as ImagePicker from 'expo-image-picker';
 import { router, useIsFocused } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, Animated, Easing, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Easing, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { IconBadge } from '@/components/Buttons';
 import { GlassCard, SectionHeader } from '@/components/Glass';
@@ -12,6 +12,7 @@ import { Logo } from '@/components/Logo';
 import { Screen } from '@/components/Screen';
 import { parseUpiQr } from '@/lib/upiQr';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 export default function ScanAndPay() {
   const { theme } = useTheme();

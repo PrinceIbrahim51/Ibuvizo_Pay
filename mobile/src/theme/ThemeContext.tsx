@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from '@/lib/secureStorage';
 
 import { palettes, type Palette, type ThemeName } from './palette';
 
@@ -13,7 +13,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [name, setName] = useState<ThemeName>('aurora');
 
   useEffect(() => {
-    SecureStore.getItemAsync(KEY)
+    SecureStore.getItem(KEY)
       .then((v) => {
         if (v === 'aurora' || v === 'light' || v === 'dark') setName(v);
       })
@@ -22,7 +22,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const setTheme = useCallback((next: ThemeName) => {
     setName(next);
-    SecureStore.setItemAsync(KEY, next).catch(() => {});
+    SecureStore.setItem(KEY, next).catch(() => {});
   }, []);
 
   const value = useMemo(() => ({ theme: palettes[name], setTheme }), [name, setTheme]);

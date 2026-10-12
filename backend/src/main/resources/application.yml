@@ -6,9 +6,10 @@ spring:
   profiles:
     default: prod          # Safe default: if no profile is given we run with production hardening.
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    # Either a full JDBC URL, or the parts. PG* names are what Vercel's Postgres (Neon) integration injects.
+    url: ${DB_URL:jdbc:postgresql://${DB_HOST:${PGHOST}}:${DB_PORT:5432}/${DB_NAME:${PGDATABASE}}?sslmode=${DB_SSLMODE:require}}
+    username: ${DB_USERNAME:${PGUSER}}
+    password: ${DB_PASSWORD:${PGPASSWORD}}
     hikari:
       maximum-pool-size: ${DB_POOL_SIZE:10}
   jpa:
@@ -98,7 +99,10 @@ app:
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:}  # comma separated; empty = no cross-origin browser access
   admin:
-    allowed-ips: ${ADMIN_ALLOWED_IPS:}         # comma separated; empty = any IP (role still required)
+    allowed-ips: ${ADMIN_ALLOWED_IPS:}
+  # Header set by a trusted edge proxy carrying the real client IP (Vercel: x-real-ip). Only set this when the
+  # app is reachable exclusively through that proxy, otherwise clients could spoof it.
+  client-ip-header: ${CLIENT_IP_HEADER:}         # comma separated; empty = any IP (role still required)
   rate-limit:
     auth-per-minute: ${RATE_LIMIT_AUTH:10}
     payments-per-minute: ${RATE_LIMIT_PAYMENTS:20}

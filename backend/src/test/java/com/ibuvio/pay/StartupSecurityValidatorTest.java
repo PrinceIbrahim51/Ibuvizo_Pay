@@ -60,6 +60,18 @@ class StartupSecurityValidatorTest {
     }
 
     @Test
+    void stagingAllowsLoggedOtpsOnlyForSandboxMoney() {
+        assertThatCode(() -> validate(props(key(32), "log", null, List.of("https://ibuvio.vercel.app")), "staging",
+                "jdbc:postgresql://db/x?sslmode=require")).doesNotThrowAnyException();
+    }
+
+    @Test
+    void acceptsNonBase64SecretsWithEnoughEntropy() {
+        assertThatCode(() -> validate(props("x".repeat(48), "sms-gateway", "https://sms.example.com", List.of()), "prod",
+                "jdbc:postgresql://db/x?sslmode=require")).doesNotThrowAnyException();
+    }
+
+    @Test
     void acceptsHardenedProdConfig() {
         assertThatCode(() -> validate(props(key(64), "sms-gateway", "https://sms.example.com", List.of("https://admin.ibuvio.app")),
                 "prod", "jdbc:postgresql://db/x?sslmode=verify-full")).doesNotThrowAnyException();

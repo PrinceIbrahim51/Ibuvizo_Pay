@@ -76,6 +76,33 @@ In debug builds without `EXPO_PUBLIC_API_URL`, the app talks to `http://10.0.2.2
 
 Checks: `npx tsc --noEmit`, `npm test`. Release builds: `npx eas-cli build -p android|ios`.
 
+## Deploy to Vercel (web app + Java API in one project)
+
+`vercel.json` defines two [Vercel Services](https://vercel.com/docs/services), both built from Dockerfiles:
+
+| Path | Service | Source |
+|---|---|---|
+| `/api/*` | Java/Spring Boot API (container) | `backend/Dockerfile` |
+| everything else | Web build of the app, served by unprivileged nginx with strict security headers | `mobile/Dockerfile`, `mobile/web/nginx.conf.template` |
+
+The web app and the API share one domain, so there's no CORS and the CSP is `connect-src 'self'`.
+
+One-time setup in the Vercel dashboard (project **ibuvio-pay**):
+1. **Database:** Storage → *Create Database* → **Neon (Postgres)** → connect it to the project. It injects
+   `PGHOST`, `PGUSER`, `PGPASSWORD`, `PGDATABASE`, which the API reads automatically (TLS required).
+2. **Environment variables** (Production): `SPRING_PROFILES_ACTIVE=staging`, `OTP_SENDER=log`,
+   `CLIENT_IP_HEADER=x-real-ip`, and three random secrets `JWT_SECRET`, `APP_ENCRYPTION_KEY`,
+   `APP_HMAC_KEY` (`openssl rand -base64 32` each, type *Sensitive*).
+3. Redeploy. Every push to the production branch deploys automatically.
+
+`staging` = full production hardening with **sandbox money**, and OTPs are written to the Vercel runtime
+logs (visible only to you) because no SMS provider is configured yet. Before real users: set up an SMS
+gateway (`OTP_SENDER=sms-gateway`, `SMS_GATEWAY_URL`, `SMS_GATEWAY_API_KEY`) and switch to
+`SPRING_PROFILES_ACTIVE=prod`. The backend refuses to start with log-OTPs in `prod`.
+
+Web vs native: the web version is for demos and desktop use. The Android/iOS apps (camera QR scanning,
+biometrics, screenshot blocking, Keychain/Keystore) are built with EAS (`npx eas-cli build`).
+
 ## API overview (`/api/v1`)
 
 | Area | Endpoints |

@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Text } from 'react-native';
+import { Text } from 'react-native';
 
 import { errorMessage } from '@/api/client';
 import { authApi } from '@/api/endpoints';
@@ -10,6 +10,7 @@ import { GradientButton } from '@/components/Buttons';
 import { Field } from '@/components/Field';
 import { digitsOnly, isWeakPin, rules } from '@/lib/validation';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 export default function ForgotMpin() {
   const { theme } = useTheme();

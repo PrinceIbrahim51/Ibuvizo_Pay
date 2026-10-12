@@ -1,10 +1,16 @@
-const raw: string = process.env.EXPO_PUBLIC_API_URL ?? (__DEV__ ? 'http://10.0.2.2:8080' : '');
+import { Platform } from 'react-native';
+
+const isWeb = Platform.OS === 'web';
 
 /**
- * Release builds refuse to talk to anything but HTTPS. (Android also blocks cleartext at the OS level via
- * usesCleartextTraffic=false and iOS App Transport Security does the same.)
+ * - Web build: the API is served from the same domain under /api (Vercel rewrite), so the base URL is ''.
+ *   Same-origin means no CORS and the browser's CSP can stay at connect-src 'self'.
+ * - Native release builds refuse anything but HTTPS (Android also blocks cleartext via
+ *   usesCleartextTraffic=false and iOS App Transport Security does the same).
  */
-if (!__DEV__ && !raw.startsWith('https://')) {
+const raw: string = process.env.EXPO_PUBLIC_API_URL ?? (isWeb ? '' : __DEV__ ? 'http://10.0.2.2:8080' : '');
+
+if (!__DEV__ && !isWeb && !raw.startsWith('https://')) {
   throw new Error('EXPO_PUBLIC_API_URL must be an https:// URL in release builds');
 }
 
@@ -16,4 +22,4 @@ export const TLS_PINS: string[] = (process.env.EXPO_PUBLIC_TLS_PINS ?? '')
   .map((s: string) => s.trim())
   .filter(Boolean);
 
-export const REQUEST_TIMEOUT_MS = 15_000;
+export const REQUEST_TIMEOUT_MS = 20_000;

@@ -1,0 +1,8 @@
+# Staging: same hardening as prod, for a sandbox (simulated money) deployment such as Render.
+# Differences from prod: OTP_SENDER=log is permitted while PSP_MODE=sandbox (OTPs appear in the server log).
+server:
+  forward-headers-strategy: ${FORWARD_HEADERS_STRATEGY:native}
+logging:
+  level:
+    root: WARN
+    com.ibuvio: INFO

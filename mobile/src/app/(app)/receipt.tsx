@@ -21,7 +21,7 @@ export default function Receipt() {
     if (!t) return;
     Share.share({
       message: `IBUVIO payment ${t.status === 'SUCCESS' ? 'successful' : t.status.toLowerCase()}\n${rupee(t.amountPaise)} ${t.direction === 'DEBIT' ? 'to' : 'from'} ${t.counterpartyName}\nUPI Ref: ${t.upiRef}\n${new Date(t.createdAt).toLocaleString('en-IN')}`,
-    });
+    }).catch(() => {});
   };
 
   return (

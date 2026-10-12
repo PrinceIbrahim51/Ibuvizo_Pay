@@ -30,6 +30,16 @@ reporting, data localisation).
 | 18 | **Scan git for leaked secrets** | gitleaks runs on every push/PR over the full history, with custom rules for IBUVIO secret names. Test keys are generated at runtime, so nothing key-like is committed. Local scan of this repo: **no leaks found**. | `.gitleaks.toml`, `.github/workflows/security.yml` |
 | 19 | **Full security audit** | This document, plus CodeQL (security-extended) for Java and TypeScript, OWASP Dependency-Check, npm audit, and 40 backend tests including security tests. | `.github/workflows/*`, `backend/src/test` |
 
+### Web build (Vercel)
+* Served by unprivileged nginx with CSP `default-src 'self'; script-src 'self'` (no inline scripts),
+  `connect-src 'self'` (the API is same-origin under `/api`), HSTS, `X-Frame-Options: DENY`, nosniff,
+  `Referrer-Policy: no-referrer`, Permissions-Policy limiting camera/mic to the app itself.
+* Session token in `sessionStorage` (survives refresh, cleared when the tab closes, never in
+  `localStorage`); only the device id, last phone number and theme are kept in `localStorage`.
+* The API trusts the client IP only from Vercel's `x-real-ip` header (`CLIENT_IP_HEADER`), so rate
+  limits apply per real client, not per proxy.
+* Native-only protections (biometrics, FLAG_SECURE, TLS pinning) are not available in browsers.
+
 ### Mobile-specific protections
 * Refresh token in iOS Keychain / Android Keystore (`WHEN_UNLOCKED_THIS_DEVICE_ONLY`, excluded from backups); access token in memory only.
 * Optional biometric unlock (`requireAuthentication`), auto-lock after 60 s in background.

@@ -30,4 +30,4 @@ jobs:
         env:
           NODE_ENV: production
           EXPO_PUBLIC_API_URL: https://api.ibuvio.app
-        run: npx expo export --platform android --platform ios --output-dir dist
+        run: npx expo export --platform android --platform ios --platform web --output-dir dist

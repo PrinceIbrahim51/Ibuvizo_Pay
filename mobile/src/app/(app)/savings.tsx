@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Switch, Text, View } from 'react-native';
 
 import { errorMessage } from '@/api/client';
 import { bankApi, savingsApi, userApi } from '@/api/endpoints';
@@ -13,6 +13,7 @@ import { amountToPaise, rupee } from '@/lib/money';
 import { useApi } from '@/lib/useApi';
 import { sanitizeText } from '@/lib/validation';
 import { useTheme } from '@/theme/ThemeContext';
+import { Alert } from '@/lib/alert';
 
 const EMOJIS = ['🏍️', '📱', '✈️', '🏠', '🎓', '💍', '🚗', '🎁'];
 const ROUND_TO = [10, 50, 100];
